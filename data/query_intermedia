@@ -1,0 +1,19 @@
+for $uso in doc("/db/gimnasio/uso_gimnasio.xml")//fila_uso
+    let $gimnasta := doc("/db/gimnasio/socios_gim.xml")//fila_socios[COD/text() = $uso/CODSOCIO/text()]
+    let $actividad := doc("/db/gimnasio/actividades_gim.xml")//fila_actividades[string(@cod) = $uso/CODACTIV/text()]
+
+    let $tipo_act := $actividad/@tipo
+
+
+    let $cuota_adic := 2 * $tipo_act - 2
+    return
+        let $horas := $uso/HORAFINAL/text() - $uso/HORAINICIO/text()
+        return  <datos>
+                    {$gimnasta/COD}
+                    <NOMBRESOCIO>{$gimnasta/NOMBRE/text()}</NOMBRESOCIO>
+                    <CODACTIV>{string($actividad/@cod)}</CODACTIV>
+                    <NOMBREACTIVIDAD>{$actividad/NOMBRE/text()}</NOMBREACTIVIDAD>
+                    <horas>{$horas}</horas>
+                    <tipoact>{string($actividad/@tipo)}</tipoact>
+                    <cuota_adicional>{$cuota_adic*$horas}</cuota_adicional>
+                </datos>
